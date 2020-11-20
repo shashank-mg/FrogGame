@@ -1,10 +1,24 @@
-/* 
-
+/*
  " THE FROG GAME "
  Author: Shashank MG
  Date: 20 / 11 / 2020
-
 */
+// Sounds
+var frogjumps = new Howl({
+  src: ["newjmp.mp3"],
+});
+
+function frogjump() {
+  frogjumps.play();
+  frogjumps.volume(0.3);
+}
+
+var theme = new Howl({
+  src: ["theme.mp3"],
+  autoplay: true,
+  loop: true,
+});
+theme.play();
 
 var start = false;
 
@@ -128,15 +142,19 @@ if (start === false) {
             if (e.keyCode === 37) {
               if (i >= 0) i -= 2;
               frog.style.marginLeft = (i + "px").toString();
+              frogjump();
             } else if (e.keyCode === 38) {
               if (k >= 0) k -= 2;
               frog.style.marginTop = (k + "px").toString();
+              frogjump();
             } else if (e.keyCode === 39) {
               if (i < window.innerWidth - 70) i += 2;
               frog.style.marginLeft = (i + "px").toString();
+              frogjump();
             } else if (e.keyCode === 40) {
               if (k < window.innerHeight - 80) k += 2;
               frog.style.marginTop = (k + "px").toString();
+              frogjump();
             }
           };
         }
