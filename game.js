@@ -95,7 +95,7 @@ if (start === false) {
         instructions.style.width = "900px";
         instructions.style.height = "50px";
         instructions.textContent =
-          "Instructions: Use Arrow Keys to move the Frog. Overcome the obstacles to reach the destination.";
+          "Instructions: Use Arrow Keys to move the Frog. Overcome the obstacles to reach the pond.";
         document.body.appendChild(instructions);
         instructions.appendChild(countdown);
 
@@ -106,7 +106,7 @@ if (start === false) {
 
         setTimeout(() => {
           document.body.style.backgroundColor = "#c3f6c3";
-          let i = 30;
+          let i = 15;
           const timeBox = document.createElement("div");
           clearInterval(id);
           document.body.removeChild(instructions);
@@ -132,6 +132,9 @@ if (start === false) {
           frog.style.display = "block";
           frog.style.marginLeft = "auto";
           frog.style.marginRight = "auto";
+          frog.style.position = "fixed";
+          frog.style.zIndex = 1;
+
           document.body.appendChild(frog);
 
           i = parseFloat(
@@ -157,6 +160,94 @@ if (start === false) {
               frogjump();
             }
           };
+
+          // Obstacles
+
+          const car1 = document.createElement("img");
+          const car2 = document.createElement("img");
+          const car3 = document.createElement("img");
+          const car4 = document.createElement("img");
+          const car5 = document.createElement("img");
+          const car6 = document.createElement("img");
+          const d1 = document.createElement("div");
+          const d6 = document.createElement("div");
+          let allcars = [car1, car2, car3, car4, car5, car6];
+
+          for (let c of allcars) {
+            c.src = "car.png";
+            c.style.width = "70px";
+            c.style.height = "70px";
+            c.style.transition = "all 2s";
+          }
+
+          // car.style.position = "fixed";
+          // car.style.zIndex = 1;
+          let allDivs = [d1, d6];
+
+          d1.style.marginTop = "60px";
+          d1.style.width = window.innerWidth;
+          d1.style.height = "400px";
+          d1.style.backgroundColor = "silver";
+
+          for (let c of allcars) {
+            d1.appendChild(c);
+          }
+
+          d6.style.backgroundColor = "#8fcadd";
+          d6.style.fontFamily = "Nunito SemiBold";
+          d6.style.textAlign = "center";
+          d6.textContent = "Finish";
+          d6.style.height = "70px";
+
+          const obstacleDiv = document.createElement("div");
+          obstacleDiv.style.position = "relative";
+          obstacleDiv.style.zIndex = -1;
+          document.body.appendChild(obstacleDiv);
+
+          for (let d of allDivs) {
+            obstacleDiv.appendChild(d);
+          }
+
+          const movecars = () => {
+            const ranNum = [6, 4, 2, 8, 9, 7, 5, 3, 1, 11];
+
+            let horizontal = Math.floor(
+              (parseFloat(getComputedStyle(d1).getPropertyValue("width")) /
+                ranNum[Math.floor(Math.random() * 9)]) *
+                Math.random()
+            );
+
+            let vertical = Math.floor(
+              (parseFloat(getComputedStyle(d1).getPropertyValue("height")) /
+                ranNum[Math.floor(Math.random() * 9)]) *
+                Math.random()
+            );
+            return [horizontal, vertical];
+          };
+
+          setInterval(() => {
+            const x1 = movecars();
+            const y1 = movecars();
+            const x2 = movecars();
+            const y2 = movecars();
+            const x3 = movecars();
+            const y3 = movecars();
+
+            const x4 = movecars();
+            const y4 = movecars();
+            const x5 = movecars();
+            const y5 = movecars();
+            const x6 = movecars();
+            const y6 = movecars();
+
+            car1.style.transform = `translate(${x1[0]}px,${y1[1]}px)`;
+            car2.style.transform = `translate(${x2[0]}px,${y2[1]}px)`;
+            car3.style.transform = `translate(${x3[0]}px,${y3[1]}px)`;
+
+            car4.style.transform = `translate(${x4[0]}px,${y4[1]}px)`;
+            car5.style.transform = `translate(${x5[0]}px,${y5[1]}px)`;
+            car6.style.transform = `translate(${x6[0]}px,${y6[1]}px)`;
+          }, 500);
         }
       }, 7000);
     }
