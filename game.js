@@ -3,6 +3,7 @@
  Author: Shashank MG
  Date: 20 / 11 / 2020
 */
+
 var flag = false,
   timeBox,
   frog,
@@ -167,11 +168,11 @@ const beginGame = () => {
                 frog.style.marginTop = (k + "px").toString();
                 frogjump();
               } else if (e.keyCode === 39) {
-                if (i < window.innerWidth - 70) i += 2;
+                if (i < window.innerWidth - 70) i += 5;
                 frog.style.marginLeft = (i + "px").toString();
                 frogjump();
               } else if (e.keyCode === 40) {
-                if (k < window.innerHeight - 80) k += 2;
+                if (k < window.innerHeight - 80) k += 5;
                 frog.style.marginTop = (k + "px").toString();
                 frogjump();
               }
@@ -212,6 +213,7 @@ const beginGame = () => {
             pond.style.width = "200px";
             pond.style.height = "70px";
             pond.style.float = "right";
+
             const obstacleDiv = document.createElement("div");
             obstacleDiv.style.position = "relative";
             obstacleDiv.style.zIndex = -1;
@@ -273,10 +275,17 @@ const beginGame = () => {
                 beginGame();
               }
             }, 17000);
+
+            // pond.addEventListener("dragenter", () => {
+            //   alert("you won!!!, try again!");
+            //   document.body.removeChild(obstacleDiv);
+            //   start = false;
+            //   flag = true;
+            //   beginGame();
+            // });
           }
           // if (getComputedStyle(frog).getPropertyValue("zIndex") - 1) {
           // }
-          console.log(getComputedStyle(frog).getPropertyValue("zIndex") - 1);
         }, 7000);
       }
     });
