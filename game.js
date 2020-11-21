@@ -222,11 +222,6 @@ const beginGame = () => {
             for (let d of allDivs) {
               obstacleDiv.appendChild(d);
             }
-            console.log(
-              getComputedStyle(d1).getPropertyValue("width"),
-              getComputedStyle(d1).getPropertyValue("height")
-            );
-
             const movecarsHorizontal = () => {
               const ranNum = [3, 2, 3, 3, 2];
               let horizontal = Math.floor(
@@ -235,7 +230,6 @@ const beginGame = () => {
                   ranNum[Math.floor(Math.random() * 4)]) *
                   Math.random()
               );
-
               return horizontal;
             };
 
