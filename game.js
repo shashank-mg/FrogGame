@@ -10,7 +10,7 @@ var flag = false,
   gameName,
   begin;
 
-// Sounds
+// Sounds - howler
 var frogjumps = new Howl({
   src: ["newjmp.mp3"],
 });
@@ -149,7 +149,7 @@ const beginGame = () => {
             frog.style.display = "block";
             frog.style.marginLeft = "auto";
             frog.style.marginRight = "auto";
-            frog.style.position = "fixed";
+            frog.style.position = "fixed"; /**  */
             frog.style.zIndex = 1;
 
             document.body.appendChild(frog);
@@ -211,59 +211,69 @@ const beginGame = () => {
             }
 
             pond.style.width = "200px";
-            pond.style.height = "70px";
+            pond.style.height = "50px";
             pond.style.float = "right";
 
             const obstacleDiv = document.createElement("div");
             obstacleDiv.style.position = "relative";
-            obstacleDiv.style.zIndex = -1;
+            obstacleDiv.style.zIndex = 0;
             document.body.appendChild(obstacleDiv);
 
             for (let d of allDivs) {
               obstacleDiv.appendChild(d);
             }
+            console.log(
+              getComputedStyle(d1).getPropertyValue("width"),
+              getComputedStyle(d1).getPropertyValue("height")
+            );
 
-            const movecars = () => {
-              const ranNum = [6, 4, 2, 8, 9, 7, 5, 3, 1, 11];
-
+            const movecarsHorizontal = () => {
+              const ranNum = [3, 2, 3, 3, 2];
               let horizontal = Math.floor(
-                (parseFloat(getComputedStyle(d1).getPropertyValue("width")) /
-                  ranNum[Math.floor(Math.random() * 9)]) *
+                ((parseFloat(getComputedStyle(d1).getPropertyValue("width")) *
+                  2.3) /
+                  ranNum[Math.floor(Math.random() * 4)]) *
                   Math.random()
               );
 
+              return horizontal;
+            };
+
+            const movecarsVertical = () => {
+              const ranNum = [2, 2, 3, 2, 3];
               let vertical = Math.floor(
-                (parseFloat(getComputedStyle(d1).getPropertyValue("height")) /
-                  ranNum[Math.floor(Math.random() * 9)]) *
+                ((parseFloat(getComputedStyle(d1).getPropertyValue("height")) *
+                  2.3) /
+                  ranNum[Math.floor(Math.random() * 4)]) *
                   Math.random()
               );
-              return [horizontal, vertical];
+              return vertical;
             };
 
             setInterval(() => {
-              const x1 = movecars();
-              const y1 = movecars();
-              car1.style.transform = `translate(${x1[0]}px,${y1[1]}px)`;
+              const x1 = movecarsHorizontal();
+              const y1 = movecarsVertical();
+              car1.style.transform = `translate(${x1}px,${y1}px)`;
 
-              const x2 = movecars();
-              const y2 = movecars();
-              car2.style.transform = `translate(${x2[0]}px,${y2[1]}px)`;
+              const x2 = movecarsHorizontal();
+              const y2 = movecarsVertical();
+              car2.style.transform = `translate(${x2}px,${y2}px)`;
 
-              const x3 = movecars();
-              const y3 = movecars();
-              car3.style.transform = `translate(${x3[0]}px,${y3[1]}px)`;
+              const x3 = movecarsHorizontal();
+              const y3 = movecarsVertical();
+              car3.style.transform = `translate(${x3}px,${y3}px)`;
 
-              const x4 = movecars();
-              const y4 = movecars();
-              car4.style.transform = `translate(${x4[0]}px,${y4[1]}px)`;
+              const x4 = movecarsHorizontal();
+              const y4 = movecarsVertical();
+              car4.style.transform = `translate(${x4}px,${y4}px)`;
 
-              const x5 = movecars();
-              const y5 = movecars();
-              car5.style.transform = `translate(${x5[0]}px,${y5[1]}px)`;
+              const x5 = movecarsHorizontal();
+              const y5 = movecarsVertical();
+              car5.style.transform = `translate(${x5}px,${y5}px)`;
 
-              const x6 = movecars();
-              const y6 = movecars();
-              car6.style.transform = `translate(${x6[0]}px,${y6[1]}px)`;
+              const x6 = movecarsHorizontal();
+              const y6 = movecarsVertical();
+              car6.style.transform = `translate(${x6}px,${y6}px)`;
             }, 500);
 
             setTimeout(() => {
