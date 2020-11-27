@@ -8,7 +8,8 @@ var flag = false,
   timeBox,
   frog,
   gameName,
-  begin;
+  begin,
+  destroyTimer;
 
 // Sounds - howler
 var frogjumps = new Howl({
@@ -33,7 +34,7 @@ const setup = () => {
   document.body.style.backgroundColor = "#7feb7f";
   timeBox = document.createElement("div");
   frog = document.createElement("img");
-  frog.src = "https://www.frog-life-cycle.com/graphics/Frog9.gif";
+  frog.src = "frog.gif";
   frog.alt = "wild-frog";
 
   gameName = document.createElement("h1");
@@ -141,51 +142,94 @@ const beginGame = () => {
         // Code for 'Jumping frog'
 
         setTimeout(() => {
+          const road = document.createElement("div");
+          let frogLeft = 0,
+            frogTop = 0;
           {
             let i,
-              k = 0;
+              k = 0,
+              initial = 0,
+              inRange = 0;
             frog.style.height = "50px";
             frog.style.width = "50px";
-            frog.style.display = "block";
+            frog.style.display = "inline";
             frog.style.marginLeft = "auto";
             frog.style.marginRight = "auto";
-            frog.style.position = "fixed"; /**  */
+            frog.style.position = "fixed";
             frog.style.zIndex = 1;
 
             document.body.appendChild(frog);
 
-            i = parseFloat(
-              getComputedStyle(frog).getPropertyValue("margin-left")
-            );
+            i = parseFloat(getComputedStyle(frog).getPropertyValue("left"));
+            k = parseFloat(getComputedStyle(frog).getPropertyValue("top"));
+            initial = k;
 
             document.onkeydown = function (e) {
-              if (e.keyCode === 37) {
-                if (i >= 0) i -= 2;
-                frog.style.marginLeft = (i + "px").toString();
-                frogjump();
-              } else if (e.keyCode === 38) {
-                if (k >= 0) k -= 2;
-                frog.style.marginTop = (k + "px").toString();
-                frogjump();
-              } else if (e.keyCode === 39) {
-                if (i < window.innerWidth - 70) i += 5;
-                frog.style.marginLeft = (i + "px").toString();
-                frogjump();
-              } else if (e.keyCode === 40) {
-                if (k < window.innerHeight - 80) k += 5;
-                frog.style.marginTop = (k + "px").toString();
-                frogjump();
+              // console.log(
+              //   getComputedStyle(frog).getPropertyValue("left"),
+              //   getComputedStyle(frog).getPropertyValue("top")
+              // );
+              inRange = parseFloat(
+                getComputedStyle(frog).getPropertyValue("right")
+              );
+              switch (e.keyCode) {
+                case 37:
+                  if (i >= 0 && k <= 550) i -= 5;
+                  frog.style.left = (i + "px").toString();
+                  frogjump();
+                  break;
+                case 38:
+                  if (k >= initial + 40) k -= 5;
+                  frog.style.top = (k + "px").toString();
+                  frogjump();
+                  break;
+                case 39:
+                  if (i < window.innerWidth - 70 && k >= initial + 30) i += 5;
+                  frog.style.left = (i + "px").toString();
+                  frogjump();
+                  break;
+                case 40:
+                  if (k < window.innerHeight - 130) {
+                    k += 5;
+                    frog.style.top = (k + "px").toString();
+                  }
+                  if (
+                    inRange >= 1 &&
+                    inRange <= 167 &&
+                    k < window.innerHeight - 80
+                  ) {
+                    k += 5;
+                    frog.style.top = (k + "px").toString();
+                  }
+                  frogjump();
+                  break;
+                default:
+                  break;
+              }
+              frogLeft = i;
+              frogTop = k;
+              console.log(frogTop);
+              console.log(frogLeft - 197);
+              if (k >= 580) {
+                alert("Congrats!!! You Win!!");
+                document.body.removeChild(obstacleDiv);
+                start = false;
+                flag = true;
+                clearTimeout(destroyTimer);
+                k = 0;
+                beginGame();
               }
             };
 
             // Obstacles
             const car1 = document.createElement("img");
+            car1.setAttribute("id", car1);
             const car2 = document.createElement("img");
             const car3 = document.createElement("img");
             const car4 = document.createElement("img");
             const car5 = document.createElement("img");
             const car6 = document.createElement("img");
-            const d1 = document.createElement("div");
+
             const pond = document.createElement("img");
             pond.src = "pond.png";
             let allcars = [car1, car2, car3, car4, car5, car6];
@@ -197,17 +241,15 @@ const beginGame = () => {
               c.style.transition = "all 2s";
             }
 
-            // car.style.position = "fixed";
-            // car.style.zIndex = 1;
-            let allDivs = [d1, pond];
+            let allDivs = [road, pond];
 
-            d1.style.marginTop = "60px";
-            d1.style.width = window.innerWidth;
-            d1.style.height = "400px";
-            d1.style.backgroundColor = "silver";
+            road.style.marginTop = "60px";
+            road.style.width = window.innerWidth;
+            road.style.height = "400px";
+            road.style.backgroundColor = "silver";
 
             for (let c of allcars) {
-              d1.appendChild(c);
+              road.appendChild(c);
             }
 
             pond.style.width = "200px";
@@ -224,21 +266,23 @@ const beginGame = () => {
             }
             const movecarsHorizontal = () => {
               const ranNum = [3, 2, 3, 3, 2];
-              let horizontal = Math.floor(
-                ((parseFloat(getComputedStyle(d1).getPropertyValue("width")) *
-                  2.3) /
-                  ranNum[Math.floor(Math.random() * 4)]) *
-                  Math.random()
+              let w = parseFloat(
+                getComputedStyle(road).getPropertyValue("width")
               );
+
+              let horizontal =
+                Math.floor((w * 2.3) / ranNum[Math.floor(Math.random() * 4)]) *
+                Math.random();
               return horizontal;
             };
 
             const movecarsVertical = () => {
+              let h = parseFloat(
+                getComputedStyle(road).getPropertyValue("height")
+              );
               const ranNum = [2, 2, 3, 2, 3];
               let vertical = Math.floor(
-                ((parseFloat(getComputedStyle(d1).getPropertyValue("height")) *
-                  2.3) /
-                  ranNum[Math.floor(Math.random() * 4)]) *
+                ((h * 2.3) / ranNum[Math.floor(Math.random() * 4)]) *
                   Math.random()
               );
               return vertical;
@@ -268,9 +312,24 @@ const beginGame = () => {
               const x6 = movecarsHorizontal();
               const y6 = movecarsVertical();
               car6.style.transform = `translate(${x6}px,${y6}px)`;
+              console.log("left", x1, "top", y1);
+              console.log(frogLeft, frogTop);
+              for (let m = 0; m <= 51; m++) {
+                console.log(x1, x1 + m, frogLeft);
+                if (x1 + m === frogLeft) {
+                  console.log("hit");
+                }
+              }
+              for (let n = 24; n >= 0; n--) {
+                if (x1 - n === frogTop - 197) {
+                  console.log("hit");
+                }
+              }
+              console.log(x1, y1);
             }, 500);
 
-            setTimeout(() => {
+            // Timer Code
+            destroyTimer = setTimeout(() => {
               if (timeBox.textContent === "Time Left: 0") {
                 alert("you lost, try again!!");
                 document.body.removeChild(obstacleDiv);
@@ -279,17 +338,8 @@ const beginGame = () => {
                 beginGame();
               }
             }, 17000);
-
-            // pond.addEventListener("dragenter", () => {
-            //   alert("you won!!!, try again!");
-            //   document.body.removeChild(obstacleDiv);
-            //   start = false;
-            //   flag = true;
-            //   beginGame();
-            // });
+            // console.dir(document.querySelectorAll("img")[1].parentElement);
           }
-          // if (getComputedStyle(frog).getPropertyValue("zIndex") - 1) {
-          // }
         }, 7000);
       }
     });
