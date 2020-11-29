@@ -75,13 +75,14 @@ const beginGame = () => {
         {
           let wait = 5;
           let countdown = document.createElement("div");
-          let instructions = document.createElement("span");
+          let instructions = document.createElement("div");
           countdown.classList.add("takeoff");
           body.appendChild(countdown);
 
           instructions.textContent =
             "Instructions: Use Arrow Keys to move the Frog. Overcome the obstacles to reach the pond.";
           instructions.classList.add("rules");
+
           body.appendChild(instructions);
           instructions.appendChild(countdown);
 
@@ -127,10 +128,11 @@ const beginGame = () => {
             initial = k;
 
             document.onkeydown = function (e) {
-              // console.log(
-              //   getComputedStyle(frog).getPropertyValue("left"),
-              //   getComputedStyle(frog).getPropertyValue("top")
-              // );
+              let downLimit =
+                initial -
+                20 +
+                parseFloat(getComputedStyle(road).getPropertyValue("height"));
+              console.log(downLimit);
               inRange = parseFloat(
                 getComputedStyle(frog).getPropertyValue("right")
               );
@@ -151,7 +153,7 @@ const beginGame = () => {
                   frogjump();
                   break;
                 case 40:
-                  if (k < window.innerHeight - 130) {
+                  if (k < downLimit) {
                     k += 5;
                     frog.style.top = (k + "px").toString();
                   }
@@ -170,8 +172,8 @@ const beginGame = () => {
               }
               frogLeft = i;
               frogTop = k;
-              console.log(frogTop);
-              console.log(frogLeft - 197);
+              // console.log(frogTop);
+              // console.log(frogLeft - 197);
               if (k >= 580) {
                 alert("Congrats!!! You Win!!");
                 body.removeChild(obstacleDiv);
@@ -266,10 +268,10 @@ const beginGame = () => {
               const x6 = movecarsHorizontal();
               const y6 = movecarsVertical();
               car6.style.transform = `translate(${x6}px,${y6}px)`;
-              console.log("left", x1, "top", y1);
-              console.log(frogLeft, frogTop);
+              // console.log("left", x1, "top", y1);
+              // console.log(frogLeft, frogTop);
               for (let m = 0; m <= 51; m++) {
-                console.log(x1, x1 + m, frogLeft);
+                // console.log(x1, x1 + m, frogLeft);
                 if (x1 + m === frogLeft) {
                   console.log("hit");
                 }
@@ -279,14 +281,17 @@ const beginGame = () => {
                   console.log("hit");
                 }
               }
-              console.log(x1, y1);
+              // console.log(x1, y1);
             }, 500);
-
+            console.log(
+              getComputedStyle(road).getPropertyValue("bottom"),
+              getComputedStyle(obstacleDiv).getPropertyValue("top")
+            );
             // Timer Code
             destroyTimer = setTimeout(() => {
               if (timeBox.textContent === "Time Left: 0") {
                 alert("you lost, try again!!");
-                body.removeChild(obstacleDiv);
+                document.body.removeChild(obstacleDiv);
                 start = false;
                 flag = true;
                 beginGame();
