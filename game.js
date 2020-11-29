@@ -9,7 +9,8 @@ var flag = false,
   frog,
   gameName,
   begin,
-  destroyTimer;
+  destroyTimer,
+  body = document.body;
 
 // Sounds - howler
 var frogjumps = new Howl({
@@ -31,7 +32,8 @@ theme.play();
 var start = false;
 
 const setup = () => {
-  document.body.style.backgroundColor = "#7feb7f";
+  body.classList.remove("body2");
+  body.classList.add("body1");
   timeBox = document.createElement("div");
   frog = document.createElement("img");
   frog.src = "frog.gif";
@@ -39,12 +41,8 @@ const setup = () => {
 
   gameName = document.createElement("h1");
   gameName.textContent = "The Frog Game";
-  gameName.style.textAlign = "center";
-  gameName.style.fontSize = "50px";
-  gameName.style.color = "#0c4c0c";
-  gameName.style.fontFamily = "Nunito SemiBold";
-  gameName.style.marginTop = "0px";
-  document.body.appendChild(gameName);
+  gameName.classList.add("gamename");
+  body.appendChild(gameName);
 };
 setup();
 
@@ -52,44 +50,25 @@ const beginGame = () => {
   if (start === false) {
     gameName.style.marginTop = "30px";
     if (flag) {
-      document.body.removeChild(gameName);
-      document.body.removeChild(frog);
-      document.body.removeChild(timeBox);
+      body.removeChild(gameName);
+      body.removeChild(frog);
+      body.removeChild(timeBox);
       setup();
     }
     begin = document.createElement("div");
-    begin.style.display = "block";
-    begin.style.marginLeft = "auto";
-    begin.style.marginRight = "auto";
-    begin.style.width = "500px";
-    begin.style.height = "500px";
-    begin.style.backgroundColor = "#3be13b";
-    begin.style.borderRadius = "4px";
-    document.body.appendChild(begin);
+    begin.classList.add("beginwindow");
+    body.appendChild(begin);
 
-    frog.style.height = "300px";
-    frog.style.width = "300px";
-    frog.style.display = "block";
-    frog.style.marginLeft = "auto";
-    frog.style.marginRight = "auto";
-    frog.style.paddingTop = "20px";
+    frog.classList.add("introfrog");
     begin.appendChild(frog);
 
     const button = document.createElement("button");
-    button.textContent = "Start The Game!!!";
-    button.style.display = "block";
-    button.style.marginRight = "auto";
-    button.style.marginLeft = "auto";
-    button.style.marginTop = "50px";
-    button.style.fontFamily = "Nunito SemiBold";
-    button.style.width = "200px";
-    button.style.height = "50px";
-    button.style.fontSize = "20px";
-    button.style.alignItems = "center";
+    button.textContent = "PLAY";
+    button.classList.add("startbutton");
 
     button.addEventListener("click", () => {
       start = true;
-      document.body.removeChild(begin);
+      body.removeChild(begin);
 
       if (start) {
         // Code for timer
@@ -97,24 +76,13 @@ const beginGame = () => {
           let wait = 5;
           let countdown = document.createElement("div");
           let instructions = document.createElement("span");
-          countdown.style.display = "block";
-          countdown.style.marginLeft = "auto";
-          countdown.style.marginRight = "auto";
-          countdown.style.width = "500px";
-          countdown.style.height = "100px";
-          countdown.style.marginTop = "160px";
-          countdown.style.fontSize = "50px";
-          document.body.appendChild(countdown);
+          countdown.classList.add("takeoff");
+          body.appendChild(countdown);
 
-          instructions.style.fontSize = "22px";
-          instructions.style.display = "block";
-          instructions.style.marginLeft = "auto";
-          instructions.style.marginRight = "auto";
-          instructions.style.width = "900px";
-          instructions.style.height = "50px";
           instructions.textContent =
             "Instructions: Use Arrow Keys to move the Frog. Overcome the obstacles to reach the pond.";
-          document.body.appendChild(instructions);
+          instructions.classList.add("rules");
+          body.appendChild(instructions);
           instructions.appendChild(countdown);
 
           const id = setInterval(() => {
@@ -123,14 +91,14 @@ const beginGame = () => {
           }, 1000);
 
           setTimeout(() => {
-            document.body.style.backgroundColor = "#c3f6c3";
+            body.classList.add("body2");
             let i = 15;
 
             clearInterval(id);
-            document.body.removeChild(instructions);
+            body.removeChild(instructions);
 
             timeBox.textContent = "Time Left: 16";
-            document.body.appendChild(timeBox);
+            body.appendChild(timeBox);
             timeBox.style.fontSize = "35px";
             const id1 = setInterval(() => {
               if (i >= 0) timeBox.textContent = `Time Left: ${i--}`;
@@ -150,15 +118,9 @@ const beginGame = () => {
               k = 0,
               initial = 0,
               inRange = 0;
-            frog.style.height = "50px";
-            frog.style.width = "50px";
-            frog.style.display = "inline";
-            frog.style.marginLeft = "auto";
-            frog.style.marginRight = "auto";
-            frog.style.position = "fixed";
-            frog.style.zIndex = 1;
+            frog.classList.add("playingfrog");
 
-            document.body.appendChild(frog);
+            body.appendChild(frog);
 
             i = parseFloat(getComputedStyle(frog).getPropertyValue("left"));
             k = parseFloat(getComputedStyle(frog).getPropertyValue("top"));
@@ -212,7 +174,7 @@ const beginGame = () => {
               console.log(frogLeft - 197);
               if (k >= 580) {
                 alert("Congrats!!! You Win!!");
-                document.body.removeChild(obstacleDiv);
+                body.removeChild(obstacleDiv);
                 start = false;
                 flag = true;
                 clearTimeout(destroyTimer);
@@ -223,7 +185,6 @@ const beginGame = () => {
 
             // Obstacles
             const car1 = document.createElement("img");
-            car1.setAttribute("id", car1);
             const car2 = document.createElement("img");
             const car3 = document.createElement("img");
             const car4 = document.createElement("img");
@@ -236,30 +197,23 @@ const beginGame = () => {
 
             for (let c of allcars) {
               c.src = "car.png";
-              c.style.width = "70px";
-              c.style.height = "70px";
-              c.style.transition = "all 2s";
+              c.classList.add("cars");
             }
 
             let allDivs = [road, pond];
 
-            road.style.marginTop = "60px";
+            road.classList.add("roads");
             road.style.width = window.innerWidth;
-            road.style.height = "400px";
-            road.style.backgroundColor = "silver";
 
             for (let c of allcars) {
               road.appendChild(c);
             }
 
-            pond.style.width = "200px";
-            pond.style.height = "50px";
-            pond.style.float = "right";
+            pond.classList.add("pond");
 
             const obstacleDiv = document.createElement("div");
-            obstacleDiv.style.position = "relative";
-            obstacleDiv.style.zIndex = 0;
-            document.body.appendChild(obstacleDiv);
+            obstacleDiv.classList.add("obstacles");
+            body.appendChild(obstacleDiv);
 
             for (let d of allDivs) {
               obstacleDiv.appendChild(d);
@@ -332,7 +286,7 @@ const beginGame = () => {
             destroyTimer = setTimeout(() => {
               if (timeBox.textContent === "Time Left: 0") {
                 alert("you lost, try again!!");
-                document.body.removeChild(obstacleDiv);
+                body.removeChild(obstacleDiv);
                 start = false;
                 flag = true;
                 beginGame();
