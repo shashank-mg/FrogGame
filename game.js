@@ -100,15 +100,13 @@ const beginGame = () => {
             timeBox.textContent = "Time Left: 16";
             timeBox.classList.add("optimize");
             body.appendChild(timeBox);
-            // timeBox.style.fontSize = "30px";
+
             const id1 = setInterval(() => {
               if (i >= 0) timeBox.textContent = `Time Left: ${i--}`;
               else clearInterval(id1);
             }, 1000);
           }, 7000);
         }
-
-        // Code for 'Jumping frog'
 
         setTimeout(() => {
           const road = document.createElement("div");
@@ -148,7 +146,7 @@ const beginGame = () => {
             body.appendChild(obstacleDiv);
 
             for (let d of allDivs) obstacleDiv.appendChild(d);
-
+            // Code for 'Jumping frog'
             {
               let i,
                 k = 0,
