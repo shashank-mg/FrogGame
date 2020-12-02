@@ -51,7 +51,6 @@ const beginGame = () => {
     gameName.style.marginTop = "30px";
     if (flag) {
       body.removeChild(gameName);
-      body.removeChild(frog);
       body.removeChild(timeBox);
       setup();
     }
@@ -99,8 +98,9 @@ const beginGame = () => {
             body.removeChild(instructions);
 
             timeBox.textContent = "Time Left: 16";
+            timeBox.classList.add("optimize");
             body.appendChild(timeBox);
-            timeBox.style.fontSize = "35px";
+            // timeBox.style.fontSize = "30px";
             const id1 = setInterval(() => {
               if (i >= 0) timeBox.textContent = `Time Left: ${i--}`;
               else clearInterval(id1);
@@ -112,79 +112,7 @@ const beginGame = () => {
 
         setTimeout(() => {
           const road = document.createElement("div");
-          let frogLeft = 0,
-            frogTop = 0;
           {
-            let i,
-              k = 0,
-              initial = 0,
-              inRange = 0;
-            frog.classList.add("playingfrog");
-
-            body.appendChild(frog);
-
-            i = parseFloat(getComputedStyle(frog).getPropertyValue("left"));
-            k = parseFloat(getComputedStyle(frog).getPropertyValue("top"));
-            initial = k;
-
-            document.onkeydown = function (e) {
-              let downLimit =
-                initial -
-                20 +
-                parseFloat(getComputedStyle(road).getPropertyValue("height"));
-              console.log(downLimit);
-              inRange = parseFloat(
-                getComputedStyle(frog).getPropertyValue("right")
-              );
-              switch (e.keyCode) {
-                case 37:
-                  if (i >= 0 && k <= 550) i -= 5;
-                  frog.style.left = (i + "px").toString();
-                  frogjump();
-                  break;
-                case 38:
-                  if (k >= initial + 40) k -= 5;
-                  frog.style.top = (k + "px").toString();
-                  frogjump();
-                  break;
-                case 39:
-                  if (i < window.innerWidth - 70 && k >= initial + 30) i += 5;
-                  frog.style.left = (i + "px").toString();
-                  frogjump();
-                  break;
-                case 40:
-                  if (k < downLimit) {
-                    k += 5;
-                    frog.style.top = (k + "px").toString();
-                  }
-                  if (
-                    inRange >= 1 &&
-                    inRange <= 167 &&
-                    k < window.innerHeight - 80
-                  ) {
-                    k += 5;
-                    frog.style.top = (k + "px").toString();
-                  }
-                  frogjump();
-                  break;
-                default:
-                  break;
-              }
-              frogLeft = i;
-              frogTop = k;
-              // console.log(frogTop);
-              // console.log(frogLeft - 197);
-              if (k >= 580) {
-                alert("Congrats!!! You Win!!");
-                body.removeChild(obstacleDiv);
-                start = false;
-                flag = true;
-                clearTimeout(destroyTimer);
-                k = 0;
-                beginGame();
-              }
-            };
-
             // Obstacles
             const car1 = document.createElement("img");
             const car2 = document.createElement("img");
@@ -207,19 +135,91 @@ const beginGame = () => {
             road.classList.add("roads");
             road.style.width = window.innerWidth;
 
-            for (let c of allcars) {
-              road.appendChild(c);
-            }
+            for (let c of allcars) road.appendChild(c);
 
             pond.classList.add("pond");
 
             const obstacleDiv = document.createElement("div");
+
+            frog.classList.remove("introfrog");
+            frog.classList.add("playingfrog");
+            road.appendChild(frog);
             obstacleDiv.classList.add("obstacles");
             body.appendChild(obstacleDiv);
 
-            for (let d of allDivs) {
-              obstacleDiv.appendChild(d);
+            for (let d of allDivs) obstacleDiv.appendChild(d);
+
+            {
+              let i,
+                k = 0,
+                roadHeight = 0,
+                roadWidth = 0,
+                frogRight = 0,
+                frogDown = 0;
+              i = parseFloat(getComputedStyle(frog).getPropertyValue("left"));
+              k = parseFloat(getComputedStyle(frog).getPropertyValue("top"));
+              let getPositions = () => {
+                roadHeight = parseFloat(
+                  getComputedStyle(road).getPropertyValue("height")
+                );
+                roadWidth = parseFloat(
+                  getComputedStyle(road).getPropertyValue("width")
+                );
+                frogRight = parseFloat(
+                  getComputedStyle(frog).getPropertyValue("right")
+                );
+                frogDown = parseFloat(
+                  getComputedStyle(frog).getPropertyValue("bottom")
+                );
+              };
+              getPositions();
+
+              window.addEventListener("resize", () => {
+                getPositions();
+                frogRight = parseFloat(
+                  getComputedStyle(frog).getPropertyValue("right")
+                );
+                frogRight = roadWidth + roadWidth * (50 / 100);
+              });
+
+              document.onkeydown = function (e) {
+                switch (e.keyCode) {
+                  case 37:
+                    if (i >= 0) i -= 5;
+                    frog.style.left = (i + "px").toString();
+                    frogjump();
+                    break;
+                  case 38:
+                    if (k >= 0) k -= 5;
+                    frog.style.top = (k + "px").toString();
+                    frogjump();
+                    break;
+                  case 39:
+                    if (
+                      i < roadWidth - 65 &&
+                      (frogRight >= 0 || frogRight < roadWidth)
+                    ) {
+                      i += 5;
+                      frog.style.left = (i + "px").toString();
+                    }
+                    frogjump();
+                    break;
+                  case 40:
+                    if (
+                      k < roadHeight - 65 &&
+                      (frogDown <= 0 || frogDown > -325)
+                    ) {
+                      k += 5;
+                      frog.style.top = (k + "px").toString();
+                    }
+                    frogjump();
+                    break;
+                  default:
+                    break;
+                }
+              };
             }
+
             const movecarsHorizontal = () => {
               const ranNum = [3, 2, 3, 3, 2];
               let w = parseFloat(
@@ -268,36 +268,17 @@ const beginGame = () => {
               const x6 = movecarsHorizontal();
               const y6 = movecarsVertical();
               car6.style.transform = `translate(${x6}px,${y6}px)`;
-              // console.log("left", x1, "top", y1);
-              // console.log(frogLeft, frogTop);
-              for (let m = 0; m <= 51; m++) {
-                // console.log(x1, x1 + m, frogLeft);
-                if (x1 + m === frogLeft) {
-                  console.log("hit");
-                }
-              }
-              for (let n = 24; n >= 0; n--) {
-                if (x1 - n === frogTop - 197) {
-                  console.log("hit");
-                }
-              }
-              // console.log(x1, y1);
             }, 500);
-            console.log(
-              getComputedStyle(road).getPropertyValue("bottom"),
-              getComputedStyle(obstacleDiv).getPropertyValue("top")
-            );
             // Timer Code
-            destroyTimer = setTimeout(() => {
-              if (timeBox.textContent === "Time Left: 0") {
-                alert("you lost, try again!!");
-                document.body.removeChild(obstacleDiv);
-                start = false;
-                flag = true;
-                beginGame();
-              }
-            }, 17000);
-            // console.dir(document.querySelectorAll("img")[1].parentElement);
+            // destroyTimer = setTimeout(() => {
+            //   if (timeBox.textContent === "Time Left: 0") {
+            //     alert("you lost, try again!!");
+            //     document.body.removeChild(obstacleDiv);
+            //     start = false;
+            //     flag = true;
+            //     beginGame();
+            //   }
+            // }, 17000);
           }
         }, 7000);
       }
