@@ -268,15 +268,15 @@ const beginGame = () => {
               car6.style.transform = `translate(${x6}px,${y6}px)`;
             }, 500);
             // Timer Code
-            // destroyTimer = setTimeout(() => {
-            //   if (timeBox.textContent === "Time Left: 0") {
-            //     alert("you lost, try again!!");
-            //     document.body.removeChild(obstacleDiv);
-            //     start = false;
-            //     flag = true;
-            //     beginGame();
-            //   }
-            // }, 17000);
+            destroyTimer = setTimeout(() => {
+              if (timeBox.textContent === "Time Left: 0") {
+                alert("you lost, try again!!");
+                document.body.removeChild(obstacleDiv);
+                start = false;
+                flag = true;
+                beginGame();
+              }
+            }, 17000);
           }
         }, 7000);
       }
